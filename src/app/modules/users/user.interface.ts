@@ -1,5 +1,6 @@
+import { USER_ROLE } from "./user.constant"
 
-type TUser = {
+export type TUser = {
     name: string,
     email: string,
     password: string,
@@ -7,5 +8,4 @@ type TUser = {
     role: 'admin'| 'user',
     address: string
 }
-
-export default TUser
+export type TUserRole = keyof typeof USER_ROLE
