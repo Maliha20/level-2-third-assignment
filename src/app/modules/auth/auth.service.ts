@@ -7,14 +7,16 @@ import jwt from 'jsonwebtoken'
 import config from "../../config";
 
 const loginUserIntoDb = async(payload:TLoginUser)=>{
-    const user = await User.findOne({email: payload.email})
+    const user = await User.findOne({email: payload?.email}).select(
+        '+password',
+      )
   
 
     if(!user){
         throw new AppError(httpStatus.NOT_FOUND, "User doesn't exist")
     }
  //checkPasswordMatchesOrNot
- const doesPasswordMatch = await bcrypt.compare(payload.password , user.password)
+ const doesPasswordMatch = await bcrypt.compare(payload?.password , user?.password)
 
  if(!doesPasswordMatch){
     throw new AppError(httpStatus.BAD_REQUEST, "Password doesn't match")
@@ -23,8 +25,8 @@ const loginUserIntoDb = async(payload:TLoginUser)=>{
  //create token 
 
  const jwtPayload = {
-    userId : user._id,
-    role : user.role
+    email: user?.email,
+    role: user?.role,
  }
 
  const token = jwt.sign( jwtPayload, config.jwt_access_secret as string , { expiresIn: '10d' });
@@ -39,3 +41,4 @@ const loginUserIntoDb = async(payload:TLoginUser)=>{
 export const authServices = {
     loginUserIntoDb
 }
+

@@ -15,6 +15,7 @@ const createBookingIntoDb = async(payload:TBookingService, user: JwtPayload)=>{
    
 
     const doesUserExist = await User.findOne({email:user?.email, role: user?.role})
+    console.log(user, doesUserExist);
     if(!doesUserExist){
         throw new AppError(httpStatus.NOT_FOUND, 'Customer not found')
       }

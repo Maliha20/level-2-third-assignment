@@ -87,13 +87,12 @@ const getAllAvailableSlotsFromDb = async () => {
   const availableSlots = await Slot.find({
     isBooked: { $in: ['available', 'cancelled'] },
   });
-  if (!availableSlots || availableSlots.length === 0) {
+  if (!availableSlots) {
     throw new AppError(
       httpStatus.NOT_FOUND,
       'No slots are available right now',
     );
   }
- 
 
   return availableSlots;
 };

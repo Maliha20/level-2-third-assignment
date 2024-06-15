@@ -13,12 +13,12 @@ const getAllServicesFromDb = async () => {
  
 };
 const getAServiceFromDb = async (id: string) => {
-  const result = await Service.findById({ _id: id });
+  const result = await Service.findById({ id });
   return result;
 };
 const updateServiceIntoDb = async (id: string, payload: Partial<TService>) => {
 
-  const result = await Service.findByIdAndUpdate({ _id: id },
+  const result = await Service.findByIdAndUpdate({ id },
     payload,
     { new: true });
   return result;
@@ -26,7 +26,7 @@ const updateServiceIntoDb = async (id: string, payload: Partial<TService>) => {
 const deleteServiceFromDb = async (id: string) => {
 
   const result = await Service.findByIdAndUpdate(
-    { _id: id },
+    {id },
     {isDeleted: true , new: true });
   return result;
 };

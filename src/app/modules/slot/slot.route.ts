@@ -8,7 +8,7 @@ import { USER_ROLE } from "../users/user.constant";
 
 const router = Router()
 
-router.post('/slots',authValidation(USER_ROLE.admin),validateRequests(slotValidations.slotValidationSchema) ,slotControlllers.createSlots)
+router.post('/services/slots',authValidation(USER_ROLE.admin),validateRequests(slotValidations.slotValidationSchema) ,slotControlllers.createSlots)
 router.get('/slots/availability',slotControlllers.getAllAvailableSlots)
 
 export const slotRoutes = router
