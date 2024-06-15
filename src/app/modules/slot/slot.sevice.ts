@@ -3,9 +3,8 @@ import AppError from '../../errors/AppError';
 import { Service } from '../service/service.model';
 import { TSlot } from './slot.interface';
 import { Slot } from './slot.model';
-import { convertMinutesIntoHour, doesSlotConflict } from './slot.utils';
-import QueryBuilder from '../../builder/QueryBuilder';
-import { slotSearchableFields } from './slot.constant';
+import { convertMinutesIntoHour } from './slot.utils';
+
 
 const createSlotsIntoDb = async (payload: TSlot) => {
   const { service, date, startTime, endTime } = payload;
@@ -36,6 +35,7 @@ const createSlotsIntoDb = async (payload: TSlot) => {
   //generate intervals
   const slots = [];
   // assigning the startTime to a let variable and looping through the number of slots
+  
 
   let currentStartTime = hourStartIntoMinutes;
   for (let i = 0; i < numberOfSlots; i++) {
@@ -49,22 +49,21 @@ const createSlotsIntoDb = async (payload: TSlot) => {
     currentStartTime = currentEndTime;
   }
 
-  const existingSlot = await Slot.find({
-    service,
-    date: { $in: date },
-  }).select('date startTime endTime');
-
-  const newSlot = {
-    date,
-    startTime,
-    endTime,
-  };
-  console.log(existingSlot, newSlot);
-  //checking for time conf
-  if (doesSlotConflict(existingSlot, newSlot)) {
-    throw new AppError(httpStatus.CONFLICT, 'This slot is not available');
-  }
-
+  // const existingSlot = await Slot.find({
+  //   service,
+  //   date: { $in: date }, 
+  // }).select('date startTime endTime');
+  
+  // const newSlot = {
+  //   date,
+  //   startTime,
+  //   endTime,
+  // };
+  // //checking for time conf
+ 
+  // if (doesSlotConflict(existingSlot, newSlot)) {
+  //   throw new AppError(httpStatus.CONFLICT, 'This slot is not available');
+  // }
   const createSlotsIntervals = [];
   for (const slot of slots) {
     const newSlotData = {
@@ -82,7 +81,9 @@ const createSlotsIntoDb = async (payload: TSlot) => {
 
 //retriving the available slots
 
-const getAllAvailableSlotsFromDb = async (query: Record<string, unknown>) => {
+const getAllAvailableSlotsFromDb = async () => {
+
+
   const availableSlots = await Slot.find({
     isBooked: { $in: ['available', 'cancelled'] },
   });
@@ -92,15 +93,9 @@ const getAllAvailableSlotsFromDb = async (query: Record<string, unknown>) => {
       'No slots are available right now',
     );
   }
-  const slotQuery = new QueryBuilder(
-    Slot.find({
-      _id: { $in: availableSlots.map((slot) => slot._id) },
-    }).populate('service'),
-    query,
-  ).search(slotSearchableFields);
-  const result = await slotQuery.modelQuery;
+ 
 
-  return result;
+  return availableSlots;
 };
 
 export const slotServices = {

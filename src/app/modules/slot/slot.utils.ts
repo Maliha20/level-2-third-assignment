@@ -1,10 +1,10 @@
 import { TSlotSchedules } from "./slot.interface"
 
-
+ 
 //checking if slot time conflicts
-export const doesSlotConflict = (existingSlot: TSlotSchedules[], newSlot: TSlotSchedules)=>{
-
-    for( const slot of existingSlot){
+export const doesSlotConflict = (newExistingSlot: TSlotSchedules[], newSlot: TSlotSchedules)=>{
+ 
+    for( const slot of newExistingSlot){
         const existingStartTime = new Date (`1997-09-01T${slot.startTime}`)
         const existingEndTime = new Date (`1997-09-01T${slot.endTime}`)
         const newStartTime =  new Date (`1997-09-01T${newSlot.startTime}`)
