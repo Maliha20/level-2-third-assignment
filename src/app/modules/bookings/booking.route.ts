@@ -2,8 +2,10 @@ import { Router } from "express";
 import validateRequests from "../../middlewares/validateRequests";
 import { bookingValidations } from "./booking.validation";
 import { bookingControllers } from "./booking.controller";
-import authValidation from "../../middlewares/authMiddleware";
-import { USER_ROLE}  from "../users/user.constant";
+import authValidation  from "../../middlewares/authMiddleware";
+import { USER_ROLE } from "../users/user.constant";
+
+
 
 const router = Router()
 

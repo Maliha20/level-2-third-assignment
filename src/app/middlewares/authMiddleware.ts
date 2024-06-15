@@ -4,11 +4,11 @@ import httpStatus from "http-status";
 import AppError from "../errors/AppError";
 import jwt, { JwtPayload }  from "jsonwebtoken";
 import config from "../config";
-import { TUser } from "../modules/users/user.interface";
+import { TUserRole } from "../modules/users/user.interface";
 import { User } from "../modules/users/user.model";
 import sendResponse from "../utils/sendResponse";
 
-const authValidation = (...requiredRoles : TUser[])=>{
+const authValidation = (...requiredRoles : TUserRole[])=>{
     return catchAsync(async(req: Request, res:  Response, next: NextFunction)=>{
         const token= req.headers.authorization?.split(' ')[1];
         
@@ -18,7 +18,7 @@ const authValidation = (...requiredRoles : TUser[])=>{
         
         const decoded = jwt.verify(token,config.jwt_access_secret as string) as JwtPayload
 
-          const {role,userUemail: userEmail} = decoded
+          const {role, userEmail: userEmail} = decoded
         
         const user = await User.findOne(userEmail)
   
@@ -45,6 +45,5 @@ const authValidation = (...requiredRoles : TUser[])=>{
        
     })
 }
-
 
 export default authValidation

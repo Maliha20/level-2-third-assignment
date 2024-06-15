@@ -9,7 +9,7 @@ import config from "../../config";
 const loginUserIntoDb = async(payload:TLoginUser)=>{
     const user = await User.findOne({email: payload.email})
   
-   console.log(user);
+
     if(!user){
         throw new AppError(httpStatus.NOT_FOUND, "User doesn't exist")
     }
