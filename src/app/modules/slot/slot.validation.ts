@@ -20,14 +20,21 @@ const dateValidationSchema = z.string().refine(
   },
 )
 const slotValidationSchema = z.object({
+body: z.object({
   service: z.string(),
   date: dateValidationSchema,
   startTime: timeValidationSchema,
   endTime: timeValidationSchema,
-  isBooked: z.enum(['available', 'booked', 'cancelled']).optional(),
-  })
-  
+}).refine((body) => {
+  const start = new Date(`1970-01-01T${body.startTime}:00`);
+  const end = new Date(`1970-01-01T${body.endTime}:00`);
 
+  return end > start;
+}, {
+  message: 'End time should be after start time',
+
+
+})  })
 
 export const slotValidations = {
   slotValidationSchema,

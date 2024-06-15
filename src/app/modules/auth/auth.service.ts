@@ -27,10 +27,10 @@ const loginUserIntoDb = async(payload:TLoginUser)=>{
     role : user.role
  }
 
- const accessToken = jwt.sign( jwtPayload, config.jwt_access_secret as string , { expiresIn: '10d' });
+ const token = jwt.sign( jwtPayload, config.jwt_access_secret as string , { expiresIn: '10d' });
 
     return {
-        accessToken,
+        token,
         user
     }
 }

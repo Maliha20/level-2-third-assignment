@@ -7,8 +7,10 @@ const createCarServiceIntoDb = async (payload: TService) => {
 };
 
 const getAllServicesFromDb = async () => {
-  const result = await Service.find();
+  const result = await Service.find({isDeleted: 'false'});
   return result;
+
+ 
 };
 const getAServiceFromDb = async (id: string) => {
   const result = await Service.findById({ _id: id });

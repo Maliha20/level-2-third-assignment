@@ -1,9 +1,8 @@
 import mongoose from 'mongoose';
-import { TErrorSources, TGenericErrorResponse } from '../interface/errors.interface';
-
+import {  TErrorMessages, TGenericErrorResponse } from '../middlewares/interface/errors.interface';
 
 const handleValidationError = (err: mongoose.Error.ValidationError):TGenericErrorResponse => {
-  const errorSources: TErrorSources= Object.values(err.errors).map(
+  const errorMessages: TErrorMessages= Object.values(err.errors).map(
     (val: mongoose.Error.ValidatorError | mongoose.Error.CastError) => {
       return {
         path: val?.path,
@@ -12,12 +11,12 @@ const handleValidationError = (err: mongoose.Error.ValidationError):TGenericErro
     },
   );
 
-  const statusCode = 400;
+  const success = false;
 
   return {
-    statusCode,
-    message: 'Validaton error',
-    errorSources,
+    success,
+    message: err.message,
+    errorMessages,
   };
 };
 

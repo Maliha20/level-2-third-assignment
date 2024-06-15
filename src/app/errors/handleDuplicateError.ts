@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import { TErrorSources, TGenericErrorResponse } from "../interface/errors.interface";
+import { TErrorMessages, TGenericErrorResponse } from "../middlewares/interface/errors.interface";
 
 
 const handleDuplicateError = (err: any):TGenericErrorResponse => {
@@ -8,16 +8,17 @@ const handleDuplicateError = (err: any):TGenericErrorResponse => {
     const match = err.message.match(/"([^"]*)"/)
 
     const extractedMessage = match && match[1]
-  const errorSources: TErrorSources = [{
+  const errorMessages: TErrorMessages = [{
     path : '',
     message : extractedMessage
   }]
-  const statusCode = 400;
-
+  const success = false;
+  
+   
   return {
-    statusCode,
-    message: 'Invalid Id',
-    errorSources,
+    success,
+    message : err.message,
+    errorMessages,
   };
 };
 

@@ -3,24 +3,27 @@
 import { error } from 'console';
 import { ErrorRequestHandler, NextFunction, Request, Response } from 'express';
 import { ZodError, ZodIssue } from 'zod';
-import { TErrorSources } from '../interface/errors.interface';
+
 import handleZodError from '../errors/handleZodError';
 import handleCastError from '../errors/handleCastError';
 import handleValidationError from '../errors/handleValidationError';
 import handleDuplicateError from '../errors/handleDuplicateError';
 import AppError from '../errors/AppError';
 import config from '../config';
+import { TErrorMessages } from './interface/errors.interface';
+
 
 
 const globalErrorHandler: ErrorRequestHandler = (err, req, res, next) => {
   // setting default values
 
-  let errorSources: TErrorSources = [
+  let errorMessages: TErrorMessages = [
     {
       path: ' ',
       message: 'Something went wrong',
     },
   ];
+  let success = false;
   let statusCode = 500;
   let message ='Somehting went wrong!';
 
@@ -29,39 +32,48 @@ const globalErrorHandler: ErrorRequestHandler = (err, req, res, next) => {
 
     statusCode = simplifiedError?.statusCode;
     message = simplifiedError?.message;
-    errorSources = simplifiedError?.errorSources;
-  } else if (err?.name === 'ValidationError') {
+    errorMessages = simplifiedError?.errorMessages;
+  }
+   //handle validation error
+  else if (err?.name === 'ValidationError') {
     const simplifiedError = handleValidationError(err);
 
-    statusCode = simplifiedError?.statusCode;
+    success = simplifiedError?.success;
     message = simplifiedError?.message;
-    errorSources = simplifiedError?.errorSources;
-  } else if (err?.name === 'CastError') {
+    errorMessages = simplifiedError?.errorMessages;
+  } 
+  //handle CastError
+  else if (err?.name === 'CastError') {
     const simplifiedError = handleCastError(err);
 
-    statusCode = simplifiedError?.statusCode;
+    success = simplifiedError?.success;
     message = simplifiedError?.message;
-    errorSources = simplifiedError?.errorSources;
-  } else if (err?.code === 11000) {
+    errorMessages = simplifiedError?.errorMessages;
+  } 
+  //handleDupe-Error
+  
+  else if (err?.code === 11000) {
     const simplifiedError = handleDuplicateError(err);
 
-    statusCode = simplifiedError?.statusCode;
+    success = simplifiedError?.success;
     message = simplifiedError?.message;
-    errorSources = simplifiedError?.errorSources;
-  } else if (err instanceof AppError) {
-    statusCode = err?.statusCode;
+    errorMessages = simplifiedError?.errorMessages;
+  }
+  //App-error
+  else if (err instanceof AppError) {
+    statusCode = err?.statusCode
     message = err?.message;
-    errorSources = [{ path: '', message: err?.message }];
+    errorMessages = [{ path: '', message: err?.message }];
   }
    else if (err instanceof Error) {
     message = err?.message;
-    errorSources = [{ path: '', message: err?.message }];
+    errorMessages = [{ path: '', message: err?.message }];
   }
 
   return res.status(statusCode).json({
     success: false,
     message,
-    errorSources,
+    errorMessages,
     stack: config.NODE_ENV === 'development' ? err?.stack : null,
   });
 };

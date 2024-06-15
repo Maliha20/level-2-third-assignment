@@ -13,6 +13,22 @@ const createSlots = catchAsync(async(req, res)=>{
     })
 })
 
+const getAllAvailableSlots = catchAsync(async(req,res)=>{
+
+  
+  const result = await slotServices.getAllAvailableSlotsFromDb(req.query)
+  sendResponse(res, {
+    statusCode:  result.length ? httpStatus.OK : httpStatus.NOT_FOUND,
+    success: result.length ? true : false,
+    message: result.length ? "Available slots retrieved successfully" : "No Data Found",
+    data: result
+
+
+
+})
+})
+
 export const slotControlllers ={
-    createSlots
+    createSlots,
+    getAllAvailableSlots
 }

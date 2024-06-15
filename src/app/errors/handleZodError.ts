@@ -1,9 +1,9 @@
 import { ZodError, ZodIssue } from 'zod';
-import { TErrorSources, TGenericErrorResponse } from '../interface/errors.interface';
+import { TErrorMessages,TGenericZodErrorResponse } from '../middlewares/interface/errors.interface';
 
 
-const handleZodError = (err: ZodError) :TGenericErrorResponse => {
-  const errorSources: TErrorSources= err.issues.map((issue: ZodIssue) => {
+const handleZodError = (err: ZodError) :TGenericZodErrorResponse => {
+  const errorMessages: TErrorMessages= err.issues.map((issue: ZodIssue) => {
     return {
       path: issue?.path[issue.path.length - 1],
       message: issue.message,
@@ -11,11 +11,11 @@ const handleZodError = (err: ZodError) :TGenericErrorResponse => {
   });
 
   const statusCode = 400;
-
+  
   return {
     statusCode,
-    message: 'Validaton error',
-    errorSources,
+    message: 'Zod error',
+    errorMessages,
   };
 };
 

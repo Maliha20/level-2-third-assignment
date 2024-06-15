@@ -1,11 +1,16 @@
-export type TErrorSources ={
+export type TErrorMessages ={
     path: string | number,
     message: string
 } []
 
 
 export type TGenericErrorResponse = {
-    statusCode : number,
+    success : boolean,
     message : string,
-    errorSources : TErrorSources
+    errorMessages : TErrorMessages
+}
+export type TGenericZodErrorResponse = {
+    statusCode : number
+    message : string,
+    errorMessages : TErrorMessages
 }
