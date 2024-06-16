@@ -13,7 +13,7 @@ const getAllServicesFromDb = async () => {
  
 };
 const getAServiceFromDb = async (id: string) => {
-  const result = await Service.findById({_id: id} );
+  const result = await Service.findById( id );
   return result;
 };
 const updateServiceIntoDb = async (id: string, payload: Partial<TService>) => {
